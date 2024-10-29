@@ -1,0 +1,7 @@
+ mkdir python
+ 
+ cd python
+ 
+ pip install pymysql -t . 
+
+ zip -r pymysql.zip ../python/
