@@ -1,0 +1,70 @@
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lab2-namespace
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: lab2-namespace
+  name: lab2-deployment
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: lab2-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: lab2-app
+    spec:
+      containers:
+      - image: nginx  #コンテナイメージを指定する
+        imagePullPolicy: Always
+        name: lab2-app
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: lab2-namespace
+  name: lab2-service
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: lab2-app
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: lab2-namespace
+  name: lab2-ingress
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: subnet-09d45220443e6fc3b, subnet-0c22259dec48e1fda #albのサブネットを指定(既存のvpcにクラスターを作成した場合に必要)
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: lab2-service
+              port:
+                number: 80
