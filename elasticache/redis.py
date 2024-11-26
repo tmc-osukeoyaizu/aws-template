@@ -1,47 +1,51 @@
 import json
-import redis
-import pymysql
 import os
+import pymysql
+import redis
 
-redis_host = os.environ['REDISHOST']
-rds_host = os.environ['RDSHOST']
-rds_user = os.environ['USER']
-rds_password = os.environ['PASSWORD']
-rds_db = os.environ['DB']
+rds_host = os.environ['RDS_HOST']
+rds_username = os.environ['RDS_USER']
+rds_password = os.environ['RDS_PASSWORD']
+rds_dbname = os.environ['RDS_DB']
+redis_host = os.environ['REDIS_HOST']
+redis_port = os.environ['REDIS_PORT']
 
-# ElastiCache Redisクライアントの設定
-redis_client = redis.StrictRedis(host=redis_host, port=6379, db=0)
+# mysql接続情報
+con = pymysql.connect(host=rds_host, user=rds_username, password=rds_password, database=rds_dbname)
 
-# RDS MySQLクライアントの設定
-con = pymysql.connect(host=rds_host, user=rds_user, password=rds_password, database=rds_db)
-# Cache = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, ssl=True, ssl_cert_reqs="none")
+# redis接続情報
+cache = redis.Redis(host=redis_host, port=redis_port, db=0)
 
+# redis接続情報(転送中の暗号化有効)
+# cache = redis.Redis(host=redis_host, port=redis_port, ssl=True, ssl_cert_reqs="none")
 
-sqlstr = 'select * from table1'
+sql = 'select * from table1'
 
-def get_user_info(sql):
-    
-    # キャッシュからデータを取得
-    cached_data = redis_client.get(sql)
-    if cached_data:
-        print('redis', cached_data)
-        return cached_data
-    
-    # キャッシュにデータがない場合、RDSから取得
-    with con.cursor() as cur:
-        cur.execute(sql)
-        result = cur.fetchall()
-        print('rds', result)
-    
-    # データをキャッシュに保存
-    redis_client.set(sql, json.dumps(result), ex=10)
-    return result
+ttl = 10
 
 def lambda_handler(event, context):
     
-    response = get_user_info(sqlstr)
-    print('response', response)
+    res = cache.get(sql)
+    
+    if res:
+        print('Cache exists!')
+        return json.loads(res)
+    
+    print('Cache not exists...')
+    with con.cursor() as cur:
+        cur.execute(sql)
+        res = cur.fetchall()
+    
+    print('Cache setting')
+    
+    # r.set(key, value_string ← json形式, ex=ttl)
+    cache.set(sql, json.dumps(res), ex=ttl)
+    return res
+    
+    
+        
     return {
         'statusCode': 200,
-        'body': response
+        'body': res
     }
+
