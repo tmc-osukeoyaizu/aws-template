@@ -22,7 +22,7 @@ phases:
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":$IMAGE_REPO_NAME,"imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":$CONTAINER_NAME,"imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
     files: imagedefinitions.json
 
@@ -33,3 +33,4 @@ artifacts:
     # IMAGE_REPO_NAME [lab2-ecr]
     # IMAGE_TAG [latest]
     # REPOSITORY_URI [0123456789.dkr.ecr.ap-northeast-1.amazonaws.com/lab2-ecr]
+    # CONTAINER_NAME [lab2-nginx-container]
