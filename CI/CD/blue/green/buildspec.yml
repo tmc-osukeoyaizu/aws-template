@@ -7,14 +7,14 @@ phases:
       - aws --version
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       # - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/lab2-ecr
-      # - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      # - IMAGE_TAG=${COMMIT_HASH:=latest}
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=$COMMIT_HASH
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker build -t $REPOSITORY_URI:IMAGE_TAG .
+      - docker tag $REPOSITORY_URI:IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
@@ -22,14 +22,12 @@ phases:
       #- docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"<コンテナ名>","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      #- printf '[{"name":"lab2-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
+      - cat imageDetail.json
 artifacts:
-    files: imagedefinitions.json
-
-
-    #環境変数
-    # AWS_DEFAULT_REGION [ap-northeast-1]
-    # AWS_ACCOUNT_ID [0123456789]
-    # IMAGE_REPO_NAME [lab2-ecr]
-    # IMAGE_TAG [latest]
-    # REPOSITORY_URI [0123456789.dkr.ecr.ap-northeast-1.amazonaws.com/lab2-ecr]
+    files:
+      - appspec.yml
+      - taskdef.json
+      - imageDetail.json
+    #- imagedefinitions.json
