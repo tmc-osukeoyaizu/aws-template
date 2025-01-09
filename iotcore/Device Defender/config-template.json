@@ -1,0 +1,49 @@
+{
+    "endpoint": "<your iot core endpoint",
+    "cert": "~/certs/testconn/device.pem.crt",
+    "key": "~/certs/testconn/private.pem.key",
+    "root-ca": "~/certs/AmazonRootCA1.pem",
+    "thing-name": "lab2-DevCliTestThing",
+    "logging": {
+      "enable-sdk-logging": true,
+      "level": "DEBUG",
+      "type": "STDOUT",
+      "file": ""
+    },
+    "jobs": {
+      "enabled": false,
+      "handler-directory": ""
+    },
+    "tunneling": {
+      "enabled": false
+    },
+    "device-defender": {
+      "enabled": true,
+      "interval": 60
+    },
+    "fleet-provisioning": {
+      "enabled": false,
+      "template-name": "",
+      "template-parameters": "",
+      "csr-file": "",
+      "device-key": ""
+    },
+    "samples": {
+      "pub-sub": {
+        "enabled": true,
+        "publish-topic": "test/dc/pubtopic",
+        "publish-file": "~/.aws-iot-device-client/pubsub/publish-file.txt",
+        "subscribe-topic": "test/dc/subtopic",
+        "subscribe-file": "~/.aws-iot-device-client/pubsub/subscribe-file.txt"
+      }
+    },
+    "config-shadow": {
+      "enabled": false
+    },
+    "sample-shadow": {
+      "enabled": false,
+      "shadow-name": "",
+      "shadow-input-file": "",
+      "shadow-output-file": ""
+    }
+  }
