@@ -1,5 +1,5 @@
 {
-    "endpoint": "<your iot core endpoint",
+    "endpoint": "<your iot core endpoint>",
     "cert": "~/certs/testconn/device.pem.crt",
     "key": "~/certs/testconn/private.pem.key",
     "root-ca": "~/certs/AmazonRootCA1.pem",
