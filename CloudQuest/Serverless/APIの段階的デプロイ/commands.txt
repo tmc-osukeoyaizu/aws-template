@@ -1,0 +1,13 @@
+python3 -m venv .venv
+
+source .venv/bin/activate
+
+pip install aws-sam-cli
+	
+sam init
+
+cd MyAPI
+
+sam build
+	
+sam deploy --guided

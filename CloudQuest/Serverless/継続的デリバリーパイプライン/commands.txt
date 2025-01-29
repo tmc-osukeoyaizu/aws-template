@@ -1,0 +1,37 @@
+mkdir my-repository &&
+
+cd my-repository &&
+    
+sam init 
+
+samconfig.tomlを編集
+    バケット名を入力
+
+buildspec.yamlを編集
+    バケット名を入力
+    
+cd .. &&
+
+sudo apt-get install zip  &&
+
+zip -r my-repository.zip my-repository/ -x "*.git*" &&
+
+aws s3 cp my-repository.zip s3://sam-bucket-1bdf6310	mkdir my-repository &&
+
+cd my-repository &&
+    
+sam init 
+
+samconfig.tomlを編集
+    バケット名を入力
+
+buildspec.yamlを編集
+    バケット名を入力
+    
+cd .. &&
+
+sudo apt-get install zip  &&
+
+zip -r my-repository.zip my-repository/ -x "*.git*" &&
+	
+aws s3 cp my-repository.zip s3://sam-bucket-1bdf6310
