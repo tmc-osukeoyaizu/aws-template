@@ -1,0 +1,7 @@
+mkdir createBucket &&
+
+cd createBucket &&
+
+echo "Test Amazon Q Developer suggestions in CodeEditor" >> test.txt &&
+
+touch addObjects.py 

@@ -1,0 +1,8 @@
+sam init
+cd HelloWorld
+sam validate
+sam build
+
+→
+sam deploy ... (元々あるcommands.txtファイルの最初のコマンド実行)
+
