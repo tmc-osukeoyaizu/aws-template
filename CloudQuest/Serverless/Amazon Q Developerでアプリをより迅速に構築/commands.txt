@@ -5,3 +5,8 @@ cd createBucket &&
 echo "Test Amazon Q Developer suggestions in CodeEditor" >> test.txt &&
 
 touch addObjects.py 
+
+sudo apt-get install zip
+
+cd createBucet
+
