@@ -5,9 +5,22 @@ source .venv/bin/activate
 pip install aws-sam-cli
 	
 sam init
+	MyAPI
 
 cd MyAPI
+
+sam validate
 
 sam build
 	
 sam deploy --guided
+	MyAPIStack
+
+
+app.py編集
+
+sam validate
+
+sam build
+
+sam deploy
